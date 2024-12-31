@@ -1,3 +1,23 @@
+library(readr)
+
+
+DataDir <- tools::R_user_dir("GetSoilPars", which="data")
+if (!dir.exists(DataDir)) {
+  dir.create(DataDir, recursive=TRUE)
+}
+
+
+## soil data #################
+
+BUEK2000_Kartenblaetter <- read_rds("C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Kartenblaetter_Box")
+
+ #                "C:\Users\h_kage\Documents\R_Statistik\BUEK_2000\data\Bodenuebersichtskarte_1_20000\Kartenblaetter_RDS"
+BUEK2000_path <- "C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Kartenblaetter_RDS/"
+BUEK2000_code <- read_rds("C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Bodenübersichtskarte_1_200000_code")
+
+
+## functions #################
+
 #' Title getPointCoordinates
 #'
 #' @param geoLaenge the longitude of the point
@@ -25,7 +45,7 @@ getPointCoordinates <- function(geoLaenge, geoBreite, crs = "EPSG:25832") {
 #' @param BUEK2000_Kartenblaetter the map sheets of the BUEK2000 data
 #' @param BUEK2000_path the path to the BUEK2000 data
 #'
-#' @returns the selected map sheet of the BUEK2000 data
+#' @returns the selected map sheet of the BUEK2000 data as sf multipolygon object
 #' @export
 #'
 #' @examples
@@ -54,7 +74,8 @@ getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path
 #' @param Kartenblatt_spatial the selected map sheet of the BUEK2000 data
 #' @param BUEK2000_code the BUEK2000 code data
 #'
-#' @returns
+#' @returns a data frame with the soil polygon data including texture data for the soil profiles
+#' of the "Leitboden", i.e. the most important soil profile and additional "Begleitböden"
 #' @export
 #'
 #' @examples
@@ -76,7 +97,7 @@ getSoilPolygon <- function(point_coordinates, Kartenblatt_spatial, BUEK2000_code
 #' @param short
 #' @param fill_NA
 #'
-#' @returns
+#' @returns a data frame with the soil texture data for the soil profile of the "Leitboden",
 #' @export
 #'
 #' @examples
