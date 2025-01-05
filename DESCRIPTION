@@ -1,16 +1,32 @@
 Package: GetSoilPars
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Load Texture and other parameters from BÜK200
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Henning", "Kage",
+      email = "kage@pflanzenbau.uni-kiel.de",
       role = c("aut", "cre")
     )
   )
 Description: More about what it does (maybe more than one line).
     Continuation lines should be indented.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Imports:
+    curl,
+    httr,
+    plyr,
+    dplyr,
+    stringr,
+    readr,
+    XML,
+    xml2,
+    sf
+Config/testthat/edition: 3
+RoxygenNote: 7.3.2
+Depends: 
+    R (>= 2.10)

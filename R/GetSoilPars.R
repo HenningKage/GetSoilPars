@@ -1,5 +1,13 @@
-library(readr)
 
+
+
+# Libraries ---------------------------------------------------------------
+library(httr)
+library(readr)
+library(plyr)
+library(dplyr)
+library(XML)
+library(xml2)
 
 DataDir <- tools::R_user_dir("GetSoilPars", which="data")
 if (!dir.exists(DataDir)) {
@@ -10,10 +18,10 @@ if (!dir.exists(DataDir)) {
 ## soil data #################
 
 BUEK2000_Kartenblaetter <- read_rds("C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Kartenblaetter_Box")
-
- #                "C:\Users\h_kage\Documents\R_Statistik\BUEK_2000\data\Bodenuebersichtskarte_1_20000\Kartenblaetter_RDS"
 BUEK2000_path <- "C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Kartenblaetter_RDS/"
 BUEK2000_code <- read_rds("C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Bodenübersichtskarte_1_200000_code")
+
+
 
 
 ## functions #################
@@ -27,19 +35,19 @@ BUEK2000_code <- read_rds("C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/
 #' @returns an sf object with the point coordinates in the given crs
 #' @export
 #'
-#' @examples
+
 getPointCoordinates <- function(geoLaenge, geoBreite, crs = "EPSG:25832") {
 
-  data.frame("geoLaenge" = geoLaenge, "geoBreite" = geoBreite) %>%
+ df <-  data.frame("geoLaenge" = geoLaenge, "geoBreite" = geoBreite) %>%
     st_as_sf(coords = c("geoLaenge", "geoBreite")) %>%
     st_set_crs(value = "+proj=longlat +datum=WGS84") %>%
     st_transform(crs = crs) %>%
     mutate("geoLaenge" = geoLaenge, "geoBreite" = geoBreite)
-
+ return(df)
 }
 
 
-#' Title
+#' Title getSoilMap
 #'
 #' @param point_coordinates the coordinates of the point as an sf object
 #' @param BUEK2000_Kartenblaetter the map sheets of the BUEK2000 data
@@ -48,7 +56,6 @@ getPointCoordinates <- function(geoLaenge, geoBreite, crs = "EPSG:25832") {
 #' @returns the selected map sheet of the BUEK2000 data as sf multipolygon object
 #' @export
 #'
-#' @examples
 getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path) {
 
   ## Select map sheet and import
@@ -63,7 +70,7 @@ getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path
   Kartenblatt_spatial <- read_rds(File_string) %>%
     dplyr::select(TKLE_NR)
 
-  Kartenblatt_spatial
+  return(Kartenblatt_spatial)
 
 }
 
@@ -78,7 +85,6 @@ getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path
 #' of the "Leitboden", i.e. the most important soil profile and additional "Begleitböden"
 #' @export
 #'
-#' @examples
 getSoilPolygon <- function(point_coordinates, Kartenblatt_spatial, BUEK2000_code) {
 
   ## Extract point values
@@ -91,16 +97,15 @@ getSoilPolygon <- function(point_coordinates, Kartenblatt_spatial, BUEK2000_code
 }
 
 
-#' Title
+#' Title getSoilTexture
 #'
-#' @param soil_polygon
-#' @param short
-#' @param fill_NA
+#' @param soil_polygon the soil polygon data including texture data for the soil profiles
+#' @param short if TRUE, the data frame is reduced to the basic information
+#' @param fill_NA if TRUE, the texture is set to the value of the upper horizon if texture is NA
 #'
 #' @returns a data frame with the soil texture data for the soil profile of the "Leitboden",
 #' @export
 #'
-#' @examples
 getSoilTexture <- function(soil_polygon, short = TRUE, fill_NA = TRUE) {
 
   Boden_All <- soil_polygon %>%
@@ -126,6 +131,35 @@ getSoilTexture <- function(soil_polygon, short = TRUE, fill_NA = TRUE) {
   }
 
   Boden_All
+
+}
+
+
+
+#' Title getPointTextureData
+#'
+#' @param geoLaenge geographic longitude
+#' @param geoBreite geographic latitude
+#' @param BUEK2000_Kartenblaetter a link to the BUEK2000 map sheets
+#' @param BUEK2000_code a link to the BUEK2000 code data
+#' @param BUEK2000_path a link to the BUEK2000 data
+#' @param short option for short format of data frame return
+#' @param fill_NA option to fill NA values in the texture data
+#'
+#' @returns a data frame with the soil texture data for the soil profile of the "Leitboden",
+#' @export
+#'
+getPointTextureData <- function(geoLaenge, geoBreite, BUEK2000_Kartenblaetter, BUEK2000_code, BUEK2000_path, short = TRUE, fill_NA = TRUE) {
+
+  Point <- getPointCoordinates (geoLaenge, geoBreite, crs = "EPSG:25832")
+
+  Map <- getSoilMap(Point, BUEK2000_Kartenblaetter, BUEK2000_path)
+
+  SPolygon <- getSoilPolygon (Point, Map, BUEK2000_code)
+
+  SoilTexture <- getSoilTexture (SPolygon, short = short, fill_NA = fill_NA)
+
+  return(SoilTexture)
 
 }
 
