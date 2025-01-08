@@ -49,7 +49,7 @@ getPointCoordinates <- function(geoLaenge, geoBreite, crs = "EPSG:25832") {
 #' @returns the selected map sheet of the BUEK2000 data as sf multipolygon object
 #' @export
 #'
-getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path) {
+getSoilMap <- function(point_coordinates) {
 
   ## Select map sheet and import
   Kartenblatt <- point_coordinates %>%
@@ -57,11 +57,10 @@ getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path
     pull(Kartenblatt) %>%
     first()
 
-  File_string <- paste0(BUEK2000_path, Kartenblatt)
-  # File_string <- "C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenübersichtskarte_1_20000/Kartenblaetter_RDS/7926"
-
-  Kartenblatt_spatial <- read_rds(File_string) %>%
-    dplyr::select(TKLE_NR)
+  File_string <- paste0(paste0("kb_",Kartenblatt))
+  Kartenblatt_spatial <- get(File_string)
+#  Kartenblatt_spatial <- read_rds(File_string) %>%
+#    dplyr::select(TKLE_NR)
 
   return(Kartenblatt_spatial)
 
@@ -72,13 +71,12 @@ getSoilMap <- function(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path
 #'
 #' @param point_coordinates the point coordinates as an sf object
 #' @param Kartenblatt_spatial the selected map sheet of the BUEK2000 data
-#' @param BUEK2000_code the BUEK2000 code data
 #'
 #' @returns a data frame with the soil polygon data including texture data for the soil profiles
 #' of the "Leitboden", i.e. the most important soil profile and additional "Begleitböden"
 #' @export
 #'
-getSoilPolygon <- function(point_coordinates, Kartenblatt_spatial, BUEK2000_code) {
+getSoilPolygon <- function(point_coordinates, Kartenblatt_spatial) {
 
   ## Extract point values
   Boden_All <- point_coordinates %>%
@@ -146,9 +144,9 @@ getPointTextureData <- function(geoLaenge, geoBreite, BUEK2000_Kartenblaetter, B
 
   Point <- getPointCoordinates (geoLaenge, geoBreite, crs = "EPSG:25832")
 
-  Map <- getSoilMap(Point, BUEK2000_Kartenblaetter, BUEK2000_path)
+  Map <- getSoilMap(Point)
 
-  SPolygon <- getSoilPolygon (Point, Map, BUEK2000_code)
+  SPolygon <- getSoilPolygon (Point, Map)
 
   SoilTexture <- getSoilTexture (SPolygon, short = short, fill_NA = fill_NA)
 
