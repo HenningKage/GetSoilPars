@@ -20,6 +20,22 @@ usethis::use_data(BUEK2000_Kartenblaetter)
 usethis::use_data(BUEK2000_code)
 
 
+fn_Kartenblaetter <- list.files(path = "C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Kartenblaetter_RDS")
+
+
+list_kb <- list()
+for (i in 1:length(fn_Kartenblaetter)) {
+#  i <- 1
+  Kartenblatt <- read_rds(paste0("C:/Users/h_kage/Documents/R_Statistik/BUEK_2000/data/Bodenuebersichtskarte_1_20000/Kartenblaetter_RDS/", fn_Kartenblaetter[i]))
+  list_kb[[i]] <- Kartenblatt
+}
+names(list_kb) <- fn_Kartenblaetter
+
+kb <- list_kb[["1518"]]
+
+usethis::use_data(list_kb)
+
+
 
 Point <- getPointCoordinates (geoLaenge, geoBreite, crs = "EPSG:25832")
 
