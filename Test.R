@@ -51,8 +51,6 @@ walk2(list_kb, fn_Kartenblaetter, function(obj, name) {
 
 Point <- getPointCoordinates (geoLaenge, geoBreite, crs = "EPSG:25832")
 
-
-
 Map <- getSoilMap(Point)#, BUEK2000_Kartenblaetter)
 
 SPolygon <- getSoilPolygon (Point, Map)
@@ -60,4 +58,4 @@ SPolygon <- getSoilPolygon (Point, Map)
 SoilTexture <- getSoilTexture (SPolygon, short = TRUE, fill_NA = TRUE)
 
 
-SoilTexture2 <- getPointTextureData (geoLaenge, geoBreite, BUEK2000_Kartenblaetter, BUEK2000_code, BUEK2000_path, short = TRUE, fill_NA = TRUE)
+SoilTexture2 <- getPointTextureData (geoLaenge, geoBreite, short = TRUE, fill_NA = TRUE)

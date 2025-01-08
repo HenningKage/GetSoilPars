@@ -7,10 +7,13 @@ Authors@R: c(
       "Henning", "Kage",
       email = "kage@pflanzenbau.uni-kiel.de",
       role = c("aut", "cre")
-    )
+    ),
+    person("Till", "Rose",
+    email = "rose@pflanzenbau.uni-kiel.de",
+     role = c("aut"))
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Description: The package supports the retrival of texture data
+    for any location in Germany based on the BUEK200 soil map.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

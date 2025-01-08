@@ -43,8 +43,6 @@ getPointCoordinates <- function(geoLaenge, geoBreite, crs = "EPSG:25832") {
 #' Title getSoilMap
 #'
 #' @param point_coordinates the coordinates of the point as an sf object
-#' @param BUEK2000_Kartenblaetter the map sheets of the BUEK2000 data
-#' @param BUEK2000_path the path to the BUEK2000 data
 #'
 #' @returns the selected map sheet of the BUEK2000 data as sf multipolygon object
 #' @export
@@ -140,7 +138,7 @@ getSoilTexture <- function(soil_polygon, short = TRUE, fill_NA = TRUE) {
 #' @returns a data frame with the soil texture data for the soil profile of the "Leitboden",
 #' @export
 #'
-getPointTextureData <- function(geoLaenge, geoBreite, BUEK2000_Kartenblaetter, BUEK2000_code, BUEK2000_path, short = TRUE, fill_NA = TRUE) {
+getPointTextureData <- function(geoLaenge, geoBreite, short = TRUE, fill_NA = TRUE) {
 
   Point <- getPointCoordinates (geoLaenge, geoBreite, crs = "EPSG:25832")
 
