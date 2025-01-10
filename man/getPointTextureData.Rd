@@ -4,30 +4,22 @@
 \alias{getPointTextureData}
 \title{Title getPointTextureData}
 \usage{
-getPointTextureData(
-  geoLaenge,
-  geoBreite,
-  BUEK2000_Kartenblaetter,
-  BUEK2000_code,
-  BUEK2000_path,
-  short = TRUE,
-  fill_NA = TRUE
-)
+getPointTextureData(geoLaenge, geoBreite, short = TRUE, fill_NA = TRUE)
 }
 \arguments{
 \item{geoLaenge}{geographic longitude}
 
 \item{geoBreite}{geographic latitude}
 
+\item{short}{option for short format of data frame return}
+
+\item{fill_NA}{option to fill NA values in the texture data}
+
 \item{BUEK2000_Kartenblaetter}{a link to the BUEK2000 map sheets}
 
 \item{BUEK2000_code}{a link to the BUEK2000 code data}
 
 \item{BUEK2000_path}{a link to the BUEK2000 data}
-
-\item{short}{option for short format of data frame return}
-
-\item{fill_NA}{option to fill NA values in the texture data}
 }
 \value{
 a data frame with the soil texture data for the soil profile of the "Leitboden",

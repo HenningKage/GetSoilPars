@@ -4,14 +4,10 @@
 \alias{getSoilMap}
 \title{Title getSoilMap}
 \usage{
-getSoilMap(point_coordinates, BUEK2000_Kartenblaetter, BUEK2000_path)
+getSoilMap(point_coordinates)
 }
 \arguments{
 \item{point_coordinates}{the coordinates of the point as an sf object}
-
-\item{BUEK2000_Kartenblaetter}{the map sheets of the BUEK2000 data}
-
-\item{BUEK2000_path}{the path to the BUEK2000 data}
 }
 \value{
 the selected map sheet of the BUEK2000 data as sf multipolygon object

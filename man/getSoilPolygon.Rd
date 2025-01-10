@@ -4,14 +4,12 @@
 \alias{getSoilPolygon}
 \title{Title getSoilPolygon}
 \usage{
-getSoilPolygon(point_coordinates, Kartenblatt_spatial, BUEK2000_code)
+getSoilPolygon(point_coordinates, Kartenblatt_spatial)
 }
 \arguments{
 \item{point_coordinates}{the point coordinates as an sf object}
 
 \item{Kartenblatt_spatial}{the selected map sheet of the BUEK2000 data}
-
-\item{BUEK2000_code}{the BUEK2000 code data}
 }
 \value{
 a data frame with the soil polygon data including texture data for the soil profiles

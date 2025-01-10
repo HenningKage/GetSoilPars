@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of GetSoilPars is to ...
+The goal of GetSoilPars is to retrieve soil texture parameters by geographic coordinates fromthe BUEK2000 soil map.
 
 ## Installation
 
@@ -35,21 +35,37 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(GetSoilPars)
+library(dplyr)
+library(sf)
 ## basic example code
+
+
+geoLaenge <- 11.5
+geoBreite <- 48.1
+
+
+# transfer geographic coordinates to a point object
+Point <- getPointCoordinates (geoLaenge, geoBreite, crs = "EPSG:25832")
+
+# get a local part of the soil map
+Map <- getSoilMap(Point)#, BUEK2000_Kartenblaetter)
+
+# retrieve the soil polygon for the location
+SPolygon <- getSoilPolygon (Point, Map)
+
+# retrieve the soil texture data for the soil profile of the "Leitboden"
+SoilTexture <- getSoilTexture (SPolygon, short = TRUE, fill_NA = TRUE)
+str(SoilTexture)
+
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r cars}
-summary(cars)
+```{r example}
+# same as above but in one step
+SoilTexture2 <- getPointTextureData (geoLaenge, geoBreite, short = TRUE, fill_NA = TRUE)
+#SoilTexture2
+
+
+
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
