@@ -60,7 +60,7 @@ str(SoilTexture)
 ```
 
 
-```{r example}
+```{r example2}
 # same as above but in one step
 SoilTexture2 <- getPointTextureData (geoLaenge, geoBreite, short = TRUE, fill_NA = TRUE)
 #SoilTexture2
