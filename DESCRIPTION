@@ -3,14 +3,14 @@ Type: Package
 Title: Load Texture and other parameters from BÜK200
 Version: 0.1.0
 Authors@R: c(
-    person(
+    person("Till", "Rose",
+    email = "rose@pflanzenbau.uni-kiel.de",
+     role = c("aut")),
+     person(
       "Henning", "Kage",
       email = "kage@pflanzenbau.uni-kiel.de",
       role = c("aut", "cre")
-    ),
-    person("Till", "Rose",
-    email = "rose@pflanzenbau.uni-kiel.de",
-     role = c("aut"))
+    )
   )
 Description: The package supports the retrival of texture data
     for any location in Germany based on the BUEK200 soil map.

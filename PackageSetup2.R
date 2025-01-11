@@ -17,7 +17,7 @@ use_r("strsplit1")
 
 ## install for test purposes
 
-
+load_all()
 
 ## check the package
 

@@ -8,6 +8,88 @@ library(plyr)
 library(dplyr)
 library(XML)
 library(xml2)
+library(stringr)
+
+
+#' Title getLBEGSoilData
+#'
+#' @param Lon the longitude of the point
+#' @param Lat the latitude of the point
+#' @returns a data frame with the soil texture data for the soil profile based on data of Reichsbodenschätzung
+#' @export
+#'
+#' @examples
+getLBEGSoilData <- function(Lon, Lat) {
+
+  Point <- getPointCoordinates(Lon, Lat, crs = "EPSG:25832")
+
+
+  ###### template for soap request ######
+  soap_template <-
+    '<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Body>
+  <ns0:GibBodenErweitert xmlns:ns0="http://nibis.lbeg.de/BodenDienst">
+  <ns0:x>${x}</ns0:x>
+  <ns0:y>${y}</ns0:y>
+  <ns0:EPSG>${epsg}</ns0:EPSG>
+  <ns0:quelle>${boden_quelle}</ns0:quelle>
+  </ns0:GibBodenErweitert>
+  </soap-env:Body>
+  </soap-env:Envelope>'
+
+
+
+  Point <- st_filter(st_sf(Point, crs=25832), NDSborder)
+
+  if (nrow(Point)>0) {
+    Point <- Point %>%
+      st_cast("POINT")
+
+    Point <-  st_coordinates(Point)
+    x <- Point[1]
+    y <- Point[2]
+
+    epsg <-  25832
+
+    # Quellen können sein 'Buek50' or 'Bodenschaetzung' or 'BK50' or 'AlleQuellenVersucheVonGrossenZuKleinemMassstab' or 'NichtDefiniert'
+    # boden_quelle = 'Bodenschaetzung'
+    boden_quelle = 'AlleQuellenVersucheVonGrossenZuKleinemMassstab'
+
+    r <- POST(
+
+      "https://nibis.lbeg.de/SoapBodenDienst/Boden.asmx",
+      body = soap_request,
+      add_headers(SOAPAction = "http://nibis.lbeg.de/BodenDienst/GibBodenErweitert"
+                  ,"Content-Type" = "text/xml")
+    )
+
+    # Changed package for import, because XML could not handle the "<![CDATA[ ]]>" tag
+    xml_import <- read_xml(r)
+
+    # Navigate the Node-Tree
+    xml_subset <- xml_child(xml_child(xml_child(xml_child(xml_child(xml_import))), 3), 6)
+
+    # Back to package XML for the convenient function xmlToDataFrame
+    xml_subset <- XML::xmlParse(xml_subset)
+    df <- xmlToDataFrame(xml_subset)
+    df$geoLaenge <- Lon
+    df$geoBreite <- Lat
+    df$BOART <- df$Hnbod
+    df$Hnbod <- NULL
+    df$LE_TXT <- ""
+    df$UTIEF <- df$Utief
+    df$Utief <- NULL
+    df$OTIEF <- df$Otief
+    df$Otief <- NULL
+    df$HUMUS <- df$Humus
+    df$Humus <- NULL
+    df$LD <- df$Ld
+    df$Ld <- NULL
+    return(df)
+  } else {
+    return(NULL)
+  }
+}
 
 DataDir <- tools::R_user_dir("GetSoilPars", which="data")
 if (!dir.exists(DataDir)) {
