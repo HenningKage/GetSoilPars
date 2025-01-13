@@ -82,8 +82,6 @@ SoilTexture <- getSoilTexture (SPolygon, short = TRUE, fill_NA = TRUE)
 
 
 
-+
-  <- getPointTextureData (geoLaenge, geoBreite, short = TRUE, fill_NA = TRUE)
 
 
 Point <- nds_sites[nds_sites$Standort == "Isenhagen","geometry"]
